@@ -1,6 +1,13 @@
 {
-    "type": "module",
+    "name": "parcel-experiment",
+    "version": "1.0.0",
+    "description": "A simple npm package to learn about using npm",
+    "main": "index.html",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
     "dependencies": {
+        "require": "^2.4.20",
         "three": "^0.121.1"
     }
 }
