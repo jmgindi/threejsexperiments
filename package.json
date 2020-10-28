@@ -1,13 +1,17 @@
 {
-    "name": "parcel-experiment",
+    "name": "threejsexperiments",
     "version": "1.0.0",
-    "description": "A simple npm package to learn about using npm",
-    "main": "index.html",
+    "description": "Exercises to get used to three for project",
+    "main": "index_1.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "webpack"
+    },
+    "devDependencies": {
+        "webpack": "^4.2.1",
+        "webpack-cli": "^4.1.0"
     },
     "dependencies": {
-        "require": "^2.4.20",
         "three": "^0.121.1"
     }
 }
