@@ -21,7 +21,7 @@ camera.position.z = 5;
 
 function animate() {
     requestAnimationFrame( animate );
-    
+    // newBoard.rotation.x += .1;
     renderer.render( scene, camera );
 }
 
