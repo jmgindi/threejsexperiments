@@ -17,9 +17,16 @@ export default function board() {
     geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
     
     //move this to the constructor later
-    const material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+    const board_material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
 
-    const board = new THREE.Mesh(geometry, material);
+    const space = new THREE.Mesh(geometry, board_material);
+
+    const frame = new THREE.WireframeGeometry(geometry);
+
+    const line = new THREE.LineSegments(frame);
+    line.material.depthTest = false;
+    line.material.opacity = 0.75;
+    line.material.transparent = true;
 
     return board;
 }
