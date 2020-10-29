@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import Board from './board';
+// import '../js/three.js';
+import board from './board.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -12,9 +13,8 @@ const geometry_a = new THREE.IcosahedronGeometry();
 const material_a = new THREE.MeshBasicMaterial( {color : 0x00ff00, wireframe: true} );
 const cube_a = new THREE.Mesh( geometry_a, material_a );
 //scene.add( cube_a );
-
-const board = new Board.createBoard();``
-scene.add(board);
+const newBoard = board();
+scene.add(newBoard);
 
 //camera position
 camera.position.z = 5;
