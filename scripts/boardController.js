@@ -46,11 +46,12 @@ export default class BoardController {
         this.scene.background = new THREE.Color('#00ffff');
 
         this.camera = new THREE.PerspectiveCamera(25, viewWidth / viewHeight, 1, 1000);
-        this.camera.position.set(0, 10, 150);
-    
+        this.camera.position.set(100, 320, 450);
+        
         this.cameraController = new OrbitControls(this.camera, this.containerE1);
         this.cameraController.maxPolarAngle = Math.PI / 2.05;
-    
+        this.cameraController.target = new THREE.Vector3(100, 0, 100);
+
         this.scene.add(this.camera);
     
         this.containerE1.appendChild(this.renderer.domElement);
@@ -58,8 +59,9 @@ export default class BoardController {
     
     initLights = () => {
         this.lights.topLight = new THREE.PointLight();
-        this.lights.topLight.position.set(0, 150, 0);
+        this.lights.topLight.position.set(100, 150, 100);
         this.lights.topLight.intensity = 1.0;
+        this.lights.topLight.target = new THREE.Vector3(100, 0, 100);
 
         this.scene.add(this.lights.topLight);
     }
@@ -96,6 +98,8 @@ export default class BoardController {
     initBoard = () => {
         const boardGeometry = new THREE.BoxGeometry(200, 15, 200);
         const board = new THREE.Mesh(boardGeometry, this.materials.boardMaterial);
+        board.position.x += 100;
+        board.position.z += 100;
         this.scene.add(board);
     }
 
