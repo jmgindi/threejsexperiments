@@ -9,7 +9,15 @@ module.exports = {
     },
     module: {
         rules: [
-            { test: /\.txt$/, use: 'raw-loader' }
+            { test: /\.txt$/, use: 'raw-loader' },
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                query: {
+                  plugins: ['transform-class-properties']
+                }
+    
+            }
         ]
     }
 }

@@ -8,10 +8,14 @@
         "build": "webpack"
     },
     "devDependencies": {
+        "babel-plugin-transform-class-properties": "^6.24.1",
         "webpack": "^4.2.1",
         "webpack-cli": "^4.1.0"
     },
     "dependencies": {
-        "three": "^0.121.1"
+        "@babel/core": "^7.12.3",
+        "babel-loader": "^8.1.0",
+        "three": "^0.121.1",
+        "three-orbitcontrols": "^2.110.3"
     }
 }
