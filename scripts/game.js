@@ -1,20 +1,17 @@
-//import './boardController.js';
+import BoardController from './boardController.js';
 
-BOARDGAME = (options) => {
-    'use strict';
-
-    options = options || {};
-
-    const boardController = null;
-
-    function init() {
-        boardController = new BOARDGAME.BoardController({
-            containerE1: options.containerE1,
-            assetsUrl: options.assetsUrl
-        });
-
-        boardController.drawBoard();
+export default class Game {
+    constructor(options) {
+        this.options = options || {};
+        this.boardController = null;
     }
 
-    init();
+    init() {
+        this.boardController = new BoardController({
+            containerE1: this.options.containerE1,
+            assetsUrl: this.options.assetsUrl
+        });
+
+        this.boardController.drawBoard();
+    }
 };
