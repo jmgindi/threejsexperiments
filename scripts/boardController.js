@@ -24,6 +24,7 @@ export default class BoardController {
             this.initEngine();
             this.initLights();
             this.initMaterials();
+            this.initGround();
             this.initObjects(function () {
                 this.onAnimationFrame();
             }.bind(this));
@@ -42,11 +43,13 @@ export default class BoardController {
         this.renderer.setSize(viewWidth, viewHeight);
     
         this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color('#00ffff');
 
         this.camera = new THREE.PerspectiveCamera(25, viewWidth / viewHeight, 1, 1000);
         this.camera.position.set(0, 10, 150);
     
         this.cameraController = new OrbitControls(this.camera, this.containerE1);
+        this.cameraController.maxPolarAngle = Math.PI / 2.05;
     
         this.scene.add(this.camera);
     
@@ -67,7 +70,8 @@ export default class BoardController {
         });
         this.materials.groundMaterial = new THREE.MeshBasicMaterial({
             transparent: true,
-            color: 0x9999ff
+            side: THREE.DoubleSide,
+            color: 0x507d2a
         })
         this.materials.darkSquareMaterial = new THREE.MeshLambertMaterial({
             color: 0x5c1400
@@ -96,7 +100,7 @@ export default class BoardController {
     }
 
     initGround = () => {
-        this.groundModel = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000, 1, 1, materials.groundMaterial));
+        this.groundModel = new THREE.Mesh((new THREE.PlaneGeometry(1000, 1000, 1, 1)), this.materials.groundMaterial);
         this.groundModel.position.set(this.squareSize * 4, -1.52, this.squareSize * 4);
         this.groundModel.rotation.x = -90 * Math.PI / 180;
         this.scene.add(this.groundModel);
