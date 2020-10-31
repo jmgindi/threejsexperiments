@@ -8,10 +8,14 @@
             body { margin: 0; overflow: hidden; }
             #boardContainer {width: 100%; height: 100%; background: white}
             canvas { display: block; }
+            .camera-toggle { position: absolute; margin: 1rem; }
         </style>
+        <script src="jquery-3.5.1.min.js"></script>
     </head>
     <body>
-        <div id="boardContainer"></div>
+        <div id="boardContainer">
+            <button class="camera-toggle">Camera Toggle</button>
+        </div>
         <script src="../js/three.js"></script>
         <script type="module" src="../scripts/main.js"></script>
         <script type="module" src="../scripts/boardController.js"></script>

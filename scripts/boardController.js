@@ -32,7 +32,7 @@ export default class BoardController {
             console.log('drawBoard');
         };
     }
-    
+
     initEngine() {
         const viewWidth = this.containerE1.offsetWidth;
         const viewHeight = this.containerE1.offsetHeight;
@@ -47,14 +47,18 @@ export default class BoardController {
 
         this.camera = new THREE.PerspectiveCamera(25, viewWidth / viewHeight, 1, 1000);
         this.camera.position.set(100, 320, 450);
-        
-        this.cameraController = new OrbitControls(this.camera, this.containerE1);
-        this.cameraController.maxPolarAngle = Math.PI / 2.05;
-        this.cameraController.target = new THREE.Vector3(100, 0, 100);
+
+        this.initCameraControls();
 
         this.scene.add(this.camera);
     
         this.containerE1.appendChild(this.renderer.domElement);
+    }
+
+    initCameraControls = () => {
+        this.cameraController = new OrbitControls(this.camera, this.containerE1);
+        this.cameraController.maxPolarAngle = Math.PI / 2.05;
+        this.cameraController.target = new THREE.Vector3(100, 0, 100);
     }
     
     initLights = () => {
@@ -110,11 +114,22 @@ export default class BoardController {
         this.scene.add(this.groundModel);
     }
 
+    initPiece = () => {
+        const piece = new THREE.Mesh(
+            new THREE.CylinderGeometry(5, 5, 20, 32),
+            new THREE.MeshBasicMaterial( { color: '#0000ff' } )
+        );
+        piece.position.set(150, 17, 150);
+        this.scene.add(piece);
+    }
+
     initObjects = (callback) => {
 
         this.scene.add(new THREE.AxesHelper(200));
+    
+        this.initBoard();
 
-        this.initBoard()
+        this.initPiece();
 
         // for (let x = 0; x <= 31; x++) {
         //     if (x > 15) {
@@ -131,5 +146,12 @@ export default class BoardController {
         requestAnimationFrame(this.onAnimationFrame);
         this.cameraController.update();
         this.renderer.render(this.scene, this.camera);
+    }
+
+    cameraToggle = () => {
+        document.addEventListener('click', (e) => {
+            if (!e.target.matches('.camera-toggle')) return;
+            this.cameraController.enabled = !this.cameraController.enabled;
+        });
     }
 }

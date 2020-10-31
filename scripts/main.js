@@ -2,8 +2,8 @@
 // import '../js/three.js';
 //import board from './board.js';
 import Game from './game.js';
-
-
+// import './controls.js';
+// import { cameraToggle } from './controls.js';
 
 (function () {
     'use strict';
@@ -14,4 +14,5 @@ import Game from './game.js';
     });
 
     game.init();
+    game.boardController.cameraToggle();
 }) ();
