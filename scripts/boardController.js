@@ -19,6 +19,8 @@ export default class BoardController {
         this.boardModel;
         this.groundModel;
         this.squareSize = 10;
+        this.objects = {};
+        this.collisions = {};
 
         this.drawBoard = function() {
             this.initEngine();
@@ -104,6 +106,8 @@ export default class BoardController {
         const board = new THREE.Mesh(boardGeometry, this.materials.boardMaterial);
         board.position.x += 100;
         board.position.z += 100;
+        this.initDetection(piece, 1, 'board');
+        this.objects.push(piece);
         this.scene.add(board);
     }
 
@@ -117,10 +121,28 @@ export default class BoardController {
     initPiece = () => {
         const piece = new THREE.Mesh(
             new THREE.CylinderGeometry(5, 5, 20, 32),
-            new THREE.MeshBasicMaterial( { color: '#0000ff' } )
+            new THREE.MeshBasicMaterial({ color: '#0000ff' })
         );
         piece.position.set(150, 17, 150);
+        this.initDetection(piece, 1, 'piece');
+        this.objects.push(piece);
         this.scene.add(piece);
+    }
+
+    initDetection = (mesh, scale, name, type='collision') => {
+        const hitBox = new THREE.box3().setFromObject(mesh);
+
+        const bounds = {
+            type: type,
+            xMin: hitBox.min.x,
+            xMax: hitBox.max.x,
+            yMin: hitBox.min.y,
+            yMax: hitBox.max.y,
+            zMin: hitBox.min.z,
+            zMax: hitBox.max.z,
+        };
+
+        this.collisions.update({ name: bounds });
     }
 
     initObjects = (callback) => {
