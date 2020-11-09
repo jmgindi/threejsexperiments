@@ -19,8 +19,7 @@ export default class BoardController {
         this.boardModel;
         this.groundModel;
         this.squareSize = 10;
-        this.objects = {};
-        this.collisions = {};
+        this.objects = [];
 
         this.drawBoard = function() {
             this.initEngine();
@@ -62,7 +61,7 @@ export default class BoardController {
         this.cameraController.maxPolarAngle = Math.PI / 2.05;
         this.cameraController.target = new THREE.Vector3(100, 0, 100);
     }
-    
+
     initLights = () => {
         this.lights.topLight = new THREE.PointLight();
         this.lights.topLight.position.set(100, 150, 100);
@@ -106,8 +105,10 @@ export default class BoardController {
         const board = new THREE.Mesh(boardGeometry, this.materials.boardMaterial);
         board.position.x += 100;
         board.position.z += 100;
-        this.initDetection(piece, 1, 'board');
-        this.objects.push(piece);
+        board.rotationPoint = new THREE.Object3D();
+        board.rotationPoint.position.set(100, 0, 100);
+        this.initDetection(board, 1, 'board');
+        this.objects.push(board);
         this.scene.add(board);
     }
 
@@ -132,20 +133,10 @@ export default class BoardController {
         this.scene.add(piece);
     }
 
-    initDetection = (mesh, scale, name, type='collision') => {
-        const hitBox = new THREE.box3().setFromObject(mesh);
-
-        const bounds = {
-            type: type,
-            xMin: hitBox.min.x,
-            xMax: hitBox.max.x,
-            yMin: hitBox.min.y,
-            yMax: hitBox.max.y,
-            zMin: hitBox.min.z,
-            zMax: hitBox.max.z,
-        };
-
-        this.collisions.update({ name: bounds });
+    initDetection = () => {
+        for (let i = 0; i < this.objects.length; i++) {
+            curr = curr;
+        }
     }
 
     initObjects = (callback) => {
@@ -168,43 +159,37 @@ export default class BoardController {
     }
     
     detectCollisions = () => {
-        for (let i = 0; i < Object.keys(this.objects).length; i++) { 
-            const bounds = {
-                xMin: this.objects[i].rotationPoint.position.x - box.geometry.parameters.width / 2,
-                xMax: this.objects[i].rotationPoint.position.x + box.geometry.parameters.width / 2,
-                yMin: this.objects[i].rotationPoint.position.y - box.geometry.parameters.height / 2,
-                yMax: this.objects[i].rotationPoint.position.y + box.geometry.parameters.height / 2,
-                zMin: this.objects[i].rotationPoint.position.z - box.geometry.parameters.depth / 2,
-                zMax: this.objects[i].rotationPoint.position.z + box.geometry.parameters.depth / 2,
-            };
-
-            for (let ii = 0; ii < Object.keys(this.collisions).length; ii++) {
-
-                if (this.collisions[ii].type == 'collision') {
-                    if (bounds.xMin <= this.collisions[ii].xMax && bounds.xMax >= this.collisions[ii].xMin &&
-                        bounds.yMin <= this.collisions[ii].yMax && bounds.yMax >= this.collisions[ii].yMin &&
-                        bounds.zMin <= this.collisions[ii].zMax && bounds.zMax >= this.collisions[ii].zMin) {
+        for (let i = 0; i < this.objects.length; i++) {
+            let curr = this.objects[i].bounds;
+            for (let ii = 0; ii < this.objects.length; ii++) {
+                let target = this.objects[ii].bounds;
+                if (target.type === 'collision') {
+                    let targetCenterX = ((target.xMax - target.xMin) / 2) + target.xMin;
+                    let objectCenterX = ((curr.xMax - curr.xMin) / 2) + curr.xMin;
+                    let targetCenterZ = ((target.zMax - target.zMin) / 2) + target.zMin;
+                    let objectCenterZ = ((curr.zMax - curr.zMin) / 2) + curr.zMin;
+                    if (curr.xMin <= target.xMax &&
+                        curr.xMax >= target.xMin &&
+                        curr.yMin <= target.yMax && 
+                        curr.yMax >= target.yMin &&
+                        curr.zMin <= target.zMax &&
+                        curr.zMax >= target.zMin) {
                             this.stopMovement();
 
-                            if (bounds.xMin <= this.collisions[ii].xMax &&
-                                bounds.xMax >= this.collisions[ii].xMax >= this.collisions[ii].xMin) {
-                                    const targetCenterX = ((this.collisions[ii].xMax - this.collisions[ii].xMin) / 2) + this.collisions[ii].xMin;
-                                    const objectCenterX = ((bounds.xMax - bounds.xMin) / 2) + bounds.xMin;
-                                    const targetCenterZ = ((this.collisions[ii].zMax - this.collisions[ii].zMin) / 2) + this.collisions[ii].zMin;
-                                    const objectCenterZ = ((bounds.zMax - bounds.zMin) / 2) + bounds.zMin;
-
+                            if (curr.xMin <= target.xMax &&
+                                curr.xMax >= target.xMax >= target.xMin) {
                                     if (targetCenterX > objectCenterX) {
-                                        this.objects[i].rotationPoint.position.x -= 1;
+                                        curr.rotationPoint.position.x -= 1;
                                     } else {
-                                        this.objects[i].rotationPoint.position.x += 1;
+                                        curr.rotationPoint.position.x += 1;
                                     }
                             }
-                            if (bounds.zMin <= this.collisions[ii].zMax &&
-                                bounds.zMax >= collisions[ii].zMin) {
+                            if (curr.zMin <= target.zMax &&
+                                curr.zMax >= target.zMin) {
                                 if (targetCenterZ > objectCenterZ) {
-                                    this.objects[i].rotationPoint.position.z -= 1;
+                                    curr.rotationPoint.position.z -= 1;
                                 } else {
-                                    this.objects[i].rotationPoint.position.z += 1;
+                                    curr.rotationPoint.position.z += 1;
                                 }
                             }
                         }
@@ -215,8 +200,8 @@ export default class BoardController {
 
     onAnimationFrame = () => {
         requestAnimationFrame(this.onAnimationFrame);
-        if (this.collisions != {}) {
-            this.detectCollisions();
+        if (this.objects != {}) {
+            this.detectobjects();
         }
         this.cameraController.update();
         this.renderer.render(this.scene, this.camera);
