@@ -15,4 +15,5 @@ import Game from './game.js';
 
     game.init();
     game.boardController.cameraToggle();
+    game.boardController.resize();
 }) ();

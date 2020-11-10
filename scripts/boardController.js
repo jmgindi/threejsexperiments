@@ -213,4 +213,13 @@ export default class BoardController {
             this.cameraController.enabled = !this.cameraController.enabled;
         });
     }
+
+    resize = () => {
+        window.addEventListener('resize', () => {
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.camera.aspect = window.innerWidth / window.innerHeight;
+
+            this.camera.updateProjectMatrix();
+        })
+    }
 }
