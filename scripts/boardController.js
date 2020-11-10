@@ -50,9 +50,11 @@ export default class BoardController {
         this.scene.background = new THREE.Color('#00ffff');
 
         this.camera = new THREE.PerspectiveCamera(25, viewWidth / viewHeight, 1, 1000);
-        this.camera.position.set(100, 320, 450);
 
         this.initCameraControls();
+        this.camera.position.set(100, 320, 450);
+
+        this.cameraController.update();
 
         this.scene.add(this.camera);
     
@@ -104,19 +106,51 @@ export default class BoardController {
     }
 
     initMouse = () => {
-
         this.mouseRaycaster = new THREE.Raycaster();
         this.mouseVector = new THREE.Vector2;
-
     }
 
     onMouseClick = (event) => {
         this.mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
-        this.mouseVector.y = (event.clientY / window.innerHeight) * 2 + 1;
+        this.mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
         this.mouseRaycaster.setFromCamera(this.mouseVector, this.camera);
-        const mouseIntersections = this.mouseRaycaster.intersectObjects(this.scene.children);
+        let mouseIntersections = this.mouseRaycaster.intersectObjects(this.scene.children);
 
-        for (let i = 0; i < mouseIntersections.length; i++) mouseIntersections[i].object.material.color.set(0x00ff00);
+        mouseIntersections[0].object.material.color.set(Math.random() * 0xffffff);
+
+        this.drawRaycastLine(this.mouseRaycaster);
+
+    }
+
+    drawRaycastLine = (raycaster) => {
+        let material = new THREE.LineBasicMaterial({
+            color: 0xff0000,
+            linewidth: 10
+        });
+        let geometry = new THREE.Geometry();
+        let startVec = new THREE.Vector3(
+            raycaster.ray.origin.x,
+            raycaster.ray.origin.y,
+            raycaster.ray.origin.z);
+    
+        let endVec = new THREE.Vector3(
+            raycaster.ray.direction.x,
+            raycaster.ray.direction.y,
+            raycaster.ray.direction.z);
+        
+        // could be any number
+        endVec.multiplyScalar(5000);
+        
+        // get the point in the middle
+        let midVec = new THREE.Vector3();
+        midVec.lerpVectors(startVec, endVec, 0.5);
+    
+        geometry.vertices.push(startVec);
+        geometry.vertices.push(midVec);
+        geometry.vertices.push(endVec);
+    
+        let line = new THREE.Line(geometry, material);
+        this.scene.add(line);
     }
 
     initBoard = () => {
@@ -173,6 +207,7 @@ export default class BoardController {
         //         initPiece(this.materials.blackPieceMaterial)
         //     }
         // }
+
     
         callback();
     }
