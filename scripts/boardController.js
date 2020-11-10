@@ -20,12 +20,15 @@ export default class BoardController {
         this.groundModel;
         this.squareSize = 10;
         this.objects = [];
+        this.mouseRaycaster;
+        this.mouseVector;
 
         this.drawBoard = function() {
             this.initEngine();
             this.initLights();
             this.initMaterials();
             this.initGround();
+            this.initMouse();
             this.initObjects(function () {
                 this.onAnimationFrame();
             }.bind(this));
@@ -100,6 +103,22 @@ export default class BoardController {
         });
     }
 
+    initMouse = () => {
+
+        this.mouseRaycaster = new THREE.Raycaster();
+        this.mouseVector = new THREE.Vector2;
+
+    }
+
+    onMouseClick = (event) => {
+        this.mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
+        this.mouseVector.y = (event.clientY / window.innerHeight) * 2 + 1;
+        this.mouseRaycaster.setFromCamera(this.mouseVector, this.camera);
+        const mouseIntersections = this.mouseRaycaster.intersectObjects(this.scene.children);
+
+        for (let i = 0; i < mouseIntersections.length; i++) mouseIntersections[i].object.material.color.set(0x00ff00);
+    }
+
     initBoard = () => {
         const boardGeometry = new THREE.BoxGeometry(200, 15, 200);
         const board = new THREE.Mesh(boardGeometry, this.materials.boardMaterial);
@@ -107,7 +126,7 @@ export default class BoardController {
         board.position.z += 100;
         board.rotationPoint = new THREE.Object3D();
         board.rotationPoint.position.set(100, 0, 100);
-        this.initDetection(board, 1, 'board');
+        //this.initDetection(board, 1, 'board');
         this.objects.push(board);
         this.scene.add(board);
     }
@@ -127,7 +146,7 @@ export default class BoardController {
         piece.position.set(150, 17, 150);
         piece.rotationPoint = new THREE.Object3D();
         piece.rotationPoint.position.set(150, 17, 150);
-        this.initDetection(piece, 1, 'piece');
+        //this.initDetection(piece, 1, 'piece');
         this.objects.push(piece);
         this.scene.add(piece.rotationPoint);
         this.scene.add(piece);
@@ -200,8 +219,9 @@ export default class BoardController {
 
     onAnimationFrame = () => {
         requestAnimationFrame(this.onAnimationFrame);
+
         if (this.objects != {}) {
-            this.detectobjects();
+            //this.detectobjects();
         }
         this.cameraController.update();
         this.renderer.render(this.scene, this.camera);
@@ -219,7 +239,11 @@ export default class BoardController {
             this.renderer.setSize(window.innerWidth, window.innerHeight);
             this.camera.aspect = window.innerWidth / window.innerHeight;
 
-            this.camera.updateProjectMatrix();
-        })
+            this.camera.updateProjectionMatrix();
+        });
+    }
+
+    clickListener = () => {
+        window.addEventListener('click', this.onMouseClick, false);
     }
 }
