@@ -49,15 +49,61 @@ export default class BoardController {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color('#00ffff');
 
-        this.camera = new THREE.PerspectiveCamera(25, viewWidth / viewHeight, 1, 1000);
+        this.camera = new THREE.PerspectiveCamera(25, viewWidth / viewHeight, 1, 10000);
+
+        this.camera.position.set(100, 320, 450);
+
+
+        this.camera.lookAt(50, 0, 50);
+
+
+
+        const newRay = new THREE.Raycaster();
+        const originVector = new THREE.Vector2();
+        originVector.x = 0;
+        originVector.y = 0;
+
+        const newRay1 = new THREE.Raycaster();
+        const originVector1 = new THREE.Vector2();
+        originVector1.x = -1;
+        originVector1.y = 0;
+
+        const newRay2 = new THREE.Raycaster();
+        const originVector2 = new THREE.Vector2();
+        originVector2.x = 1;
+        originVector2.y = 0;
+
+        const newRay3 = new THREE.Raycaster();
+        const originVector3 = new THREE.Vector2();
+        originVector3.x = 0;
+        originVector3.y = -1;
+
+        const newRay4 = new THREE.Raycaster();
+        const originVector4 = new THREE.Vector2();
+        originVector4.x = 0;
+        originVector4.y = 1;
+
+        newRay.setFromCamera(originVector, this.camera);
+
+        newRay1.setFromCamera(originVector1, this.camera);
+        newRay2.setFromCamera(originVector2, this.camera);
+        newRay3.setFromCamera(originVector3, this.camera);
+        newRay4.setFromCamera(originVector4, this.camera);
+
+
+        this.drawRaycastLine(newRay);
+        this.drawRaycastLine(newRay1);
+        this.drawRaycastLine(newRay2);
+        this.drawRaycastLine(newRay3);
+        this.drawRaycastLine(newRay4);
+
 
         this.initCameraControls();
-        this.camera.position.set(100, 320, 450);
 
         this.cameraController.update();
 
         this.scene.add(this.camera);
-    
+
         this.containerE1.appendChild(this.renderer.domElement);
     }
 
@@ -107,7 +153,7 @@ export default class BoardController {
 
     initMouse = () => {
         this.mouseRaycaster = new THREE.Raycaster();
-        this.mouseVector = new THREE.Vector2;
+        this.mouseVector = new THREE.Vector2();
     }
 
     onMouseClick = (event) => {
